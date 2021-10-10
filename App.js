@@ -1,83 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
-import { increment, decrement, resetCounter } from './src/store/actions';
 
-import { store } from './src/store/store';
+import * as React from 'react';
+import CounterScreen from './src/screens/CounterScreen';
+import LocationScreen from './src/screens/LocationScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import {primary} from './src/constants/Colors';
+import ListScreen from './src/screens/ListScreen';
 
 const App = props => {
-  const [counter, setCounter] = React.useState(0);
 
-  React.useEffect(() => {
-    // Update the document title using the browser API
-    store.subscribe(() => {
-      const { value } = store.getState();
-      console.log(value);
-      setCounter(value);
-    })
-  }, [store]);
-
-  const incrementHandler = () => {
-    increment.apply();
-  }
-
-  const decrementHandler = () => {
-    decrement.apply();
-  }
-
-  const resetHandler = () => {
-    resetCounter.apply();
-  }
+  const Tab = createBottomTabNavigator();
 
   return (
-    <View style={styles.container}>
-      {/* <View style={styles.input}>
-        <TextInput
-          placeholder="Enter Text"
-          onChangeText={inputTextHandler}
-          value={text} />
-      </View> */}
-      <Text style={{ fontSize: 20 }}>{counter.toString()}</Text>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.button}>
-          <Button title="+"
-            onPress={incrementHandler} />
-        </View>
-        <View style={styles.button}>
-          <Button title="-"
-            onPress={decrementHandler} />
-        </View>
-        <View style={styles.button}>
-          <Button title="Reset"
-            onPress={resetHandler} />
-        </View>
-      </View>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === 'Counter') {
+              iconName = focused ? 'add-circle' : 'add-circle-outline';
+            } else if (route.name === 'Location') {
+              iconName = focused ? 'location' : 'location-outline';
+            } else if (route.name === 'List') {
+              iconName = focused ? 'list-circle' : 'list-circle-outline';
+            }
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: primary,
+          tabBarInactiveTintColor: 'gray',
+        })}>
+        <Tab.Screen name="Counter" component={CounterScreen} />
+        <Tab.Screen name="Location" component={LocationScreen} />
+        <Tab.Screen name="List" component={ListScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  input: {
-    width: '80%',
-    borderColor: 'black',
-    borderWidth: 1,
-  },
-  buttonsContainer: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    width: 100,
-    padding: 10,
-  },
-});
 
 export default App;
