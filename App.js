@@ -6,11 +6,11 @@ import {increment, decrement} from './src/store/actions';
 import { store } from './src/store/store';
 
 const App = props => {
-  const [text, setText] = React.useState('');
+  const [counter, setCounter] = React.useState(0);
 
-  const inputTextHandler = (text) => {
-    setText(text);
-  };
+  // const inputTextHandler = (text) => {
+  //   setText(text);
+  // };
 
   const incrementHandler = () => {
     increment.apply();
@@ -23,7 +23,8 @@ const App = props => {
 
   store.subscribe(() => {
     const {value} = store.getState();
-    setText(value+"");
+    console.log(value);
+    setCounter(value);
   })
 
   return (
@@ -34,7 +35,7 @@ const App = props => {
           onChangeText={inputTextHandler}
           value={text} />
       </View> */}
-      <Text style={{fontSize: 20}}>{text}</Text>
+      <Text style={{fontSize: 20}}>{counter.toString()}</Text>
       <View style={styles.buttonsContainer}>
         <View style={styles.button}>
           <Button title="+"
