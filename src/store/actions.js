@@ -7,3 +7,7 @@ export const increment = () => {
 export const decrement = () => {
     store.dispatch({ type: 'counter/decremented' })
 };
+
+export const resetCounter = () => {
+    store.dispatch({ type: 'counter/reset' })
+};

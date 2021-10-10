@@ -1,16 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
-import {increment, decrement} from './src/store/actions';
+import { increment, decrement, resetCounter } from './src/store/actions';
 
 import { store } from './src/store/store';
 
 const App = props => {
   const [counter, setCounter] = React.useState(0);
 
-  // const inputTextHandler = (text) => {
-  //   setText(text);
-  // };
+  React.useEffect(() => {
+    // Update the document title using the browser API
+    store.subscribe(() => {
+      const { value } = store.getState();
+      console.log(value);
+      setCounter(value);
+    })
+  }, [store]);
 
   const incrementHandler = () => {
     increment.apply();
@@ -20,12 +25,9 @@ const App = props => {
     decrement.apply();
   }
 
-
-  store.subscribe(() => {
-    const {value} = store.getState();
-    console.log(value);
-    setCounter(value);
-  })
+  const resetHandler = () => {
+    resetCounter.apply();
+  }
 
   return (
     <View style={styles.container}>
@@ -35,7 +37,7 @@ const App = props => {
           onChangeText={inputTextHandler}
           value={text} />
       </View> */}
-      <Text style={{fontSize: 20}}>{counter.toString()}</Text>
+      <Text style={{ fontSize: 20 }}>{counter.toString()}</Text>
       <View style={styles.buttonsContainer}>
         <View style={styles.button}>
           <Button title="+"
@@ -44,6 +46,10 @@ const App = props => {
         <View style={styles.button}>
           <Button title="-"
             onPress={decrementHandler} />
+        </View>
+        <View style={styles.button}>
+          <Button title="Reset"
+            onPress={resetHandler} />
         </View>
       </View>
       <StatusBar style="auto" />
